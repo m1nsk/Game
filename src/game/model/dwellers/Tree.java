@@ -2,55 +2,36 @@ package game.model.dwellers;
 
 import game.model.Field;
 
-import java.awt.*;
-
 /**
  * Created by korolm on 12.12.2017.
  */
-public class Tree extends AbstractDweller implements DwellerObserver {
+public class Tree extends AbstractDweller{
     final static int BREEDING_SIZE = 4;
     final static int BREEDING_DISTANCE = 4;
 
 
     public Tree(Field field) {
         size = 0;
+        priority = 0;
+        type = DwellersType.TREE;
         this.field = field;
     }
 
     @Override
     protected void breed() {
-        if (this.size > BREEDING_SIZE) {
-            generateNewDweller();
+        if (size >= BREEDING_SIZE) {
+            if (generateNewDweller(BREEDING_DISTANCE, new Tree(field)))
+                size = 0;
         }
     }
 
     @Override
     protected void death() {
-
     }
 
     @Override
     protected void turn() {
         size++;
         breed();
-    }
-
-    @Override
-    public void nextTurn() {
-        turn();
-    }
-
-    @Override
-    public int getPriority(){
-        return 0;
-    }
-
-    protected Tree generateNewDweller() {
-        Point ltCorner = new Point(point.x - BREEDING_DISTANCE, point.y - BREEDING_DISTANCE);
-        while (true) {
-            if (field.setNewDweller(new Point(ltCorner.x + ran.nextInt(BREEDING_DISTANCE), ltCorner.y + ran.nextInt(BREEDING_DISTANCE)), new Tree(field))) {
-                break;
-            }
-        }
     }
 }

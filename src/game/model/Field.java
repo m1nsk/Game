@@ -1,9 +1,12 @@
 package game.model;
-import game.model.dwellers.*;
+import game.model.dwellers.Rabbit;
+import game.model.dwellers.Tree;
+import game.model.dwellers.interfaces.DwellerObserver;
 
 import java.awt.Point;
 import java.util.PriorityQueue;
 import java.util.Comparator;
+import java.util.Scanner;
 
 /**
  * Created by korolm on 12.12.2017.
@@ -13,7 +16,8 @@ public class Field {
 
     private DwellerObserver[][] dwellers = new DwellerObserver[FIELD_SIZE][FIELD_SIZE];
 
-    private PriorityQueue<DwellerObserver> dwellerQueue = new PriorityQueue<>(dwellerComparator);
+    private PriorityQueue<DwellerPositionTuple> dwellerQueue = new PriorityQueue<>(dwellerComparator);
+    private PriorityQueue<DwellerPositionTuple> newDwellerQueue = new PriorityQueue<>(dwellerComparator);
 
     public Field() {
         FIELD_SIZE = 20;
@@ -25,40 +29,146 @@ public class Field {
         initDefaultDwellers();
     }
 
-    public static Comparator<DwellerObserver> dwellerComparator = (DwellerObserver d1, DwellerObserver d2)->Integer.compare(d1.getPriority(), d2.getPriority());
+    public boolean removeDweller(Point point, DwellerObserver dweller) {
+        if (isFieldAllowed(point)){
+            dwellers[point.x][point.y] = null;
+            dwellerQueue.remove(new DwellerPositionTuple(dweller, point));
+            newDwellerQueue.remove(new DwellerPositionTuple(dweller, point));
+            return true;
+        }
+        return false;
+    }
+
+    public int getSize() {
+        return FIELD_SIZE;
+    }
+
+    public void moveDweller(Point oldPoint, Point newPoint, DwellerObserver dweller) {
+        removeDweller(oldPoint, dweller);
+        dwellers[oldPoint.x][oldPoint.y] = null;
+        addDweller(newPoint, dweller);
+        dwellers[newPoint.x][newPoint.y] = dweller;
+    }
+
+    public DwellerObserver getDweller(Point point){
+        if (isFieldAllowed(point)){
+            System.out.println(point);
+            System.out.println(dwellers[point.x][point.y]);
+            return dwellers[point.x][point.y];
+        }
+        return null;
+    }
+
+    private static Comparator<DwellerPositionTuple> dwellerComparator = (DwellerPositionTuple d1, DwellerPositionTuple d2)->Integer.compare(d1.getDweller().getPriority(), d2.getDweller().getPriority());
+
+    void newTurnNotify(){
+        while (dwellerQueue.size() > 0) {
+            DwellerPositionTuple dweller = dwellerQueue.poll();
+            newDwellerQueue.add(dweller);
+            dweller.getDweller().nextTurn(dweller.getPosition());
+        }
+        dwellerQueue.addAll(newDwellerQueue);
+        newDwellerQueue.clear();
+    }
 
     private void initDefaultDwellers() {
         for(int i = 0; i < FIELD_SIZE; i++) {
-            for(int i = 0; i < FIELD_SIZE; i++) {
-                dwellers = null;
+            for(int j = 0; j < FIELD_SIZE; j++) {
+                dwellers[i][j] = null;
             }
         }
     }
 
     private boolean isFieldEnable(Point point) {
-        if (isFieldEmpty() && isFieldAllowed())
+        if (isFieldAllowed(point)) {
+            if (isFieldEmpty(point))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean isFieldAllowed(Point point) {
+        if (point.x < FIELD_SIZE && point.x >= 0 && point.y < FIELD_SIZE && point.y >= 0)
             return true;
         return false;
     }
 
-    private boolean isFieldAllowed(Point point) {
-        if (point.x < FIELD_SIZE && point.x > 0 && point.y < FIELD_SIZE && point.y > 0)
-            return true;
-        return false;
-    }
-
-    private boolean isFieldEmpty(Point point) {
+    public boolean isFieldEmpty(Point point) {
         if (dwellers[point.x][point.y] == null)
-            return false;
-        return true;
+            return true;
+        return false;
     }
 
-    public boolean setNewDweller(Point point, DwellerObserver dweller){
+    public boolean addDweller(Point point, DwellerObserver dweller){
         if (isFieldEnable(point)){
             dwellers[point.x][point.y] = dweller;
+            newDwellerQueue.add(new DwellerPositionTuple(dweller, point));
             return true;
         }
         return false;
     }
 
-};
+    public static void main(String[] args) {
+        int n = 0;
+        Field field = new Field();
+        field.addDweller(new Point(10, 15), new Tree(field));
+        field.addDweller(new Point(7, 18), new Tree(field));
+        field.addDweller(new Point(5, 5), new Tree(field));
+        field.addDweller(new Point(12, 12), new Rabbit(field));
+        field.addDweller(new Point(10, 8), new Rabbit(field));
+        Scanner reader = new Scanner(System.in);  // Reading from System.in
+        while(n != 99) {
+            //System.out.println("Enter a number: ");
+            //n = reader.nextInt(); // Scans the next token of the input as an int.
+//once finished
+            field.newTurnNotify();
+        }
+        reader.close();
+    }
+
+    private class DwellerPositionTuple{
+        DwellerObserver dweller;
+        Point position;
+
+        public DwellerPositionTuple(DwellerObserver dweller, Point position) {
+            this.dweller = dweller;
+            this.position = position;
+        }
+
+        public DwellerObserver getDweller() {
+            return dweller;
+        }
+
+        public void setDweller(DwellerObserver dweller) {
+            this.dweller = dweller;
+        }
+
+        public Point getPosition() {
+            return position;
+        }
+
+        public void setPosition(Point position) {
+            this.position = position;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            DwellerPositionTuple that = (DwellerPositionTuple) o;
+
+            if (dweller != null ? !dweller.equals(that.dweller) : that.dweller != null) return false;
+            return position != null ? position.equals(that.position) : that.position == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = dweller != null ? dweller.hashCode() : 0;
+            result = 31 * result + (position != null ? position.hashCode() : 0);
+            return result;
+        }
+    }
+
+}
