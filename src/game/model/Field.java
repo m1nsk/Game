@@ -1,6 +1,7 @@
 package game.model;
 import game.model.dwellers.Rabbit;
 import game.model.dwellers.Tree;
+import game.model.dwellers.Wolf;
 import game.model.dwellers.interfaces.DwellerObserver;
 
 import java.awt.Point;
@@ -52,8 +53,6 @@ public class Field {
 
     public DwellerObserver getDweller(Point point){
         if (isFieldAllowed(point)){
-            System.out.println(point);
-            System.out.println(dwellers[point.x][point.y]);
             return dwellers[point.x][point.y];
         }
         return null;
@@ -114,8 +113,11 @@ public class Field {
         field.addDweller(new Point(10, 15), new Tree(field));
         field.addDweller(new Point(7, 18), new Tree(field));
         field.addDweller(new Point(5, 5), new Tree(field));
+        field.addDweller(new Point(7, 13), new Tree(field));
+        field.addDweller(new Point(5, 8), new Tree(field));
         field.addDweller(new Point(12, 12), new Rabbit(field));
         field.addDweller(new Point(10, 8), new Rabbit(field));
+        field.addDweller(new Point(0, 0), new Wolf(field));
         Scanner reader = new Scanner(System.in);  // Reading from System.in
         while(n != 99) {
             //System.out.println("Enter a number: ");
