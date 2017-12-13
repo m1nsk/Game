@@ -2,6 +2,7 @@ package game.model.dwellers;
 
 import game.model.Field;
 import game.model.dwellers.interfaces.DwellerObserver;
+import game.model.dwellers.interfaces.IDwellerHelper;
 
 import java.awt.Point;
 import java.util.HashSet;
@@ -23,6 +24,8 @@ abstract class AbstractDweller implements DwellerObserver{
 
     protected DwellersType type;
 
+    protected String icon;
+
     @Override
     public void nextTurn(Point point) {
         position = point;
@@ -39,9 +42,15 @@ abstract class AbstractDweller implements DwellerObserver{
         return type;
     }
 
+    @Override
+    public String getIcon() {
+        return icon;
+    }
+
     abstract protected void breed();
 
     protected void death() {
+        System.out.println(" : Dweller dead:" + getIcon());
         field.removeDweller(position, this);
     };
 
@@ -60,7 +69,7 @@ abstract class AbstractDweller implements DwellerObserver{
             pSet.add(nextPoint);
             counter++;
             if (field.addDweller(nextPoint, dweller)) {
-                System.out.println(nextPoint.x + " " + nextPoint.y + " : new Dweller");
+                System.out.println(nextPoint.x + " " + nextPoint.y + " : new Dweller: " + dweller.getIcon());
                 return true;
             }
         }

@@ -26,6 +26,7 @@ public class Rabbit extends AbstractDweller{
         size = 0;
         priority = 1;
         hunger = 0;
+        icon = "r";
         type = DwellersType.RABBIT;
         this.field = field;
     }

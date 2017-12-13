@@ -75,12 +75,12 @@ public class WaveTrace {
     private static Point restorePath(final int[][] array, final Point finish,final Point start, final int depth) {
         Point resultPoint = new Point(finish.x, finish.y);
         int cycleDepth = depth;
-        for(int[] list: array) {
-            for(int item: list) {
-                System.out.print(item);
-            }
-            System.out.print("\n");
-        }
+//        for(int[] list: array) {
+//            for(int item: list) {
+//                System.out.print(item);
+//            }
+//            System.out.print("\n");
+//        }
         while (--cycleDepth >= 0) {
             for (int i = 0; i < turns.length; i++) {
                 Point newPoint = new Point(resultPoint.x + turns[i].x, resultPoint.y + turns[i].y);

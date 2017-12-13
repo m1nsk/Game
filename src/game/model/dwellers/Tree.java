@@ -14,6 +14,7 @@ public class Tree extends AbstractDweller{
         size = 0;
         priority = 0;
         type = DwellersType.TREE;
+        icon = "t";
         this.field = field;
     }
 

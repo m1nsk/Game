@@ -3,6 +3,7 @@ import game.model.dwellers.Rabbit;
 import game.model.dwellers.Tree;
 import game.model.dwellers.Wolf;
 import game.model.dwellers.interfaces.DwellerObserver;
+import game.view.ConsoleVisualize;
 
 import java.awt.Point;
 import java.util.PriorityQueue;
@@ -107,27 +108,6 @@ public class Field {
         return false;
     }
 
-    public static void main(String[] args) {
-        int n = 0;
-        Field field = new Field();
-        field.addDweller(new Point(10, 15), new Tree(field));
-        field.addDweller(new Point(7, 18), new Tree(field));
-        field.addDweller(new Point(5, 5), new Tree(field));
-        field.addDweller(new Point(7, 13), new Tree(field));
-        field.addDweller(new Point(5, 8), new Tree(field));
-        field.addDweller(new Point(12, 12), new Rabbit(field));
-        field.addDweller(new Point(10, 8), new Rabbit(field));
-        field.addDweller(new Point(0, 0), new Wolf(field));
-        Scanner reader = new Scanner(System.in);  // Reading from System.in
-        while(n != 99) {
-            //System.out.println("Enter a number: ");
-            //n = reader.nextInt(); // Scans the next token of the input as an int.
-//once finished
-            field.newTurnNotify();
-        }
-        reader.close();
-    }
-
     private class DwellerPositionTuple{
         DwellerObserver dweller;
         Point position;
@@ -141,16 +121,8 @@ public class Field {
             return dweller;
         }
 
-        public void setDweller(DwellerObserver dweller) {
-            this.dweller = dweller;
-        }
-
         public Point getPosition() {
             return position;
-        }
-
-        public void setPosition(Point position) {
-            this.position = position;
         }
 
         @Override
@@ -171,6 +143,30 @@ public class Field {
             result = 31 * result + (position != null ? position.hashCode() : 0);
             return result;
         }
+    }
+
+    public static void main(String[] args) {
+        int n = 0;
+        Field field = new Field();
+        ConsoleVisualize consoleView = new ConsoleVisualize();
+        field.addDweller(new Point(10, 15), new Tree(field));
+        field.addDweller(new Point(7, 18), new Tree(field));
+        field.addDweller(new Point(5, 5), new Tree(field));
+        field.addDweller(new Point(7, 13), new Tree(field));
+        field.addDweller(new Point(5, 8), new Tree(field));
+        field.addDweller(new Point(12, 12), new Rabbit(field));
+        field.addDweller(new Point(10, 8), new Rabbit(field));
+        field.addDweller(new Point(0, 0), new Wolf(field));
+        Scanner reader = new Scanner(System.in);  // Reading from System.in
+        while(n != 99) {
+            System.out.println("Enter a number: ");
+            n = reader.nextInt(); // Scans the next token of the input as an int.
+//once finished
+            consoleView.show(field);
+            field.newTurnNotify();
+
+        }
+        reader.close();
     }
 
 }

@@ -26,6 +26,7 @@ public class Wolf extends AbstractDweller{
         size = 0;
         priority = 1;
         hunger = 0;
+        icon = "w";
         type = DwellersType.WOLF;
         this.field = field;
     }
@@ -58,6 +59,7 @@ public class Wolf extends AbstractDweller{
         hunger++;
         if (hunger >= HUNGER_LIMIT) {
             death();
+            return;
         }
         if (hunt()) {
             size++;
