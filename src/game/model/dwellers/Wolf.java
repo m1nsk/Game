@@ -15,7 +15,7 @@ import java.util.Arrays;
 public class Wolf extends AbstractDweller{
     final static int BREEDING_SIZE = 3;
     final static int BREEDING_DISTANCE = 5;
-    final static int HUNGER_LIMIT = 6;
+    final static int HUNGER_LIMIT = 10;
     final static ArrayList<DwellersType> VICTIMS = new ArrayList<>(Arrays.asList(DwellersType.RABBIT));
 
     private int hunger;
@@ -38,12 +38,17 @@ public class Wolf extends AbstractDweller{
         }
         DwellerObserver pointDweller = field.getDweller(newPoint);
         if (pointDweller != null) {
-            field.removeDweller(newPoint, pointDweller);
+            kill(newPoint, pointDweller);
             field.moveDweller(position, newPoint, this);
             return true;
         }
         field.moveDweller(position, newPoint, this);
         return false;
+    }
+
+    private void kill(Point point, DwellerObserver dweller){
+        System.out.println(" : Dweller " + dweller.getIcon() + " killed by " + this.getIcon());
+        field.removeDweller(point, dweller);
     }
 
     @Override

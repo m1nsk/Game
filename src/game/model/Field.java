@@ -157,6 +157,9 @@ public class Field {
         field.addDweller(new Point(12, 12), new Rabbit(field));
         field.addDweller(new Point(10, 8), new Rabbit(field));
         field.addDweller(new Point(0, 0), new Wolf(field));
+        field.addDweller(new Point(0, 12), new Wolf(field));
+        field.addDweller(new Point(12, 11), new Wolf(field));
+        field.addDweller(new Point(16, 11), new Wolf(field));
         Scanner reader = new Scanner(System.in);  // Reading from System.in
         while(n != 99) {
             System.out.println("Enter a number: ");

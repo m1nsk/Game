@@ -52,7 +52,7 @@ abstract class AbstractDweller implements DwellerObserver{
     protected void death() {
         System.out.println(" : Dweller dead:" + getIcon());
         field.removeDweller(position, this);
-    };
+    }
 
     abstract protected void turn();
 

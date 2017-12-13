@@ -38,12 +38,17 @@ public class Rabbit extends AbstractDweller{
         }
         DwellerObserver pointDweller = field.getDweller(newPoint);
         if (pointDweller != null) {
-            field.removeDweller(newPoint, pointDweller);
+            kill(newPoint, pointDweller);
             field.moveDweller(position, newPoint, this);
             return true;
         }
         field.moveDweller(position, newPoint, this);
         return false;
+    }
+
+    private void kill(Point point, DwellerObserver dweller){
+        System.out.println(" : Dweller " + dweller.getIcon() + " eaten by " + this.getIcon());
+        field.removeDweller(point, dweller);
     }
 
     @Override
@@ -59,6 +64,7 @@ public class Rabbit extends AbstractDweller{
         hunger++;
         if (hunger >= HUNGER_LIMIT) {
             death();
+            return;
         }
         if (hunt()) {
             size++;
