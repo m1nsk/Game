@@ -1,7 +1,6 @@
 package game.model;
-import game.model.dwellers.Rabbit;
-import game.model.dwellers.Tree;
-import game.model.dwellers.Wolf;
+import game.Factory.DwellerFactory;
+import game.model.dwellers.DwellersType;
 import interfaces.DwellerObserver;
 import game.view.ConsoleVisualize;
 
@@ -98,6 +97,8 @@ public class Field {
     }
 
     public boolean addDweller(Point point, DwellerObserver dweller){
+        if(dweller == null)
+            return false;
         if (isFieldEnable(point)){
             dwellers[point.x][point.y] = dweller;
             newDwellerQueue.add(new DwellerPositionTuple(dweller, point));
@@ -147,17 +148,13 @@ public class Field {
         int n = 0;
         Field field = new Field();
         ConsoleVisualize consoleView = new ConsoleVisualize();
-        field.addDweller(new Point(10, 15), new Tree(field));
-        field.addDweller(new Point(7, 18), new Tree(field));
-        field.addDweller(new Point(5, 5), new Tree(field));
-        field.addDweller(new Point(7, 13), new Tree(field));
-        field.addDweller(new Point(5, 8), new Tree(field));
-        field.addDweller(new Point(12, 12), new Rabbit(field));
-        field.addDweller(new Point(10, 8), new Rabbit(field));
-        field.addDweller(new Point(0, 0), new Wolf(field));
-        field.addDweller(new Point(0, 12), new Wolf(field));
-        field.addDweller(new Point(12, 11), new Wolf(field));
-        field.addDweller(new Point(16, 11), new Wolf(field));
+        field.addDweller(new Point(10, 15), DwellerFactory.createDweller(DwellersType.TREE,field));
+        field.addDweller(new Point(12, 12), DwellerFactory.createDweller(DwellersType.TREE,field));
+        field.addDweller(new Point(10, 8), DwellerFactory.createDweller(DwellersType.TREE,field));
+        field.addDweller(new Point(0, 0), DwellerFactory.createDweller(DwellersType.RABBIT,field));
+        field.addDweller(new Point(0, 12), DwellerFactory.createDweller(DwellersType.RABBIT,field));
+        field.addDweller(new Point(12, 11), DwellerFactory.createDweller(DwellersType.RABBIT,field));
+        field.addDweller(new Point(16, 11), DwellerFactory.createDweller(DwellersType.WOLF,field));
         Scanner reader = new Scanner(System.in);  // Reading from System.in
         while(n != 99) {
             System.out.println("Enter a number: ");
