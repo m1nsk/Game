@@ -2,21 +2,21 @@ package game.model.dwellers;
 
 import game.algorithms.WaveTrace;
 import game.model.Field;
-import game.model.dwellers.interfaces.DwellerObserver;
+import interfaces.DwellerObserver;
+import interfaces.impl.AbstractDweller;
 
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
  * Created by korolm on 12.12.2017.
  */
-public class Wolf extends AbstractDweller{
-    final static int BREEDING_SIZE = 3;
-    final static int BREEDING_DISTANCE = 5;
-    final static int HUNGER_LIMIT = 10;
-    final static ArrayList<DwellersType> VICTIMS = new ArrayList<>(Arrays.asList(DwellersType.RABBIT));
+public class Wolf extends AbstractDweller {
+    private final static int BREEDING_SIZE = 3;
+    private final static int BREEDING_DISTANCE = 5;
+    private final static int HUNGER_LIMIT = 10;
+    private final static ArrayList<DwellersType> VICTIMS = new ArrayList<>(Arrays.asList(DwellersType.RABBIT));
 
     private int hunger;
 
@@ -26,7 +26,6 @@ public class Wolf extends AbstractDweller{
         size = 0;
         priority = 1;
         hunger = 0;
-        icon = "w";
         type = DwellersType.WOLF;
         this.field = field;
     }
@@ -47,7 +46,6 @@ public class Wolf extends AbstractDweller{
     }
 
     private void kill(Point point, DwellerObserver dweller){
-        System.out.println(" : Dweller " + dweller.getIcon() + " killed by " + this.getIcon());
         field.removeDweller(point, dweller);
     }
 

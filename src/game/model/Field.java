@@ -2,7 +2,7 @@ package game.model;
 import game.model.dwellers.Rabbit;
 import game.model.dwellers.Tree;
 import game.model.dwellers.Wolf;
-import game.model.dwellers.interfaces.DwellerObserver;
+import interfaces.DwellerObserver;
 import game.view.ConsoleVisualize;
 
 import java.awt.Point;
@@ -14,20 +14,20 @@ import java.util.Scanner;
  * Created by korolm on 12.12.2017.
  */
 public class Field {
-    private int FIELD_SIZE = 20;
+    private final int fieldSize;
 
-    private DwellerObserver[][] dwellers = new DwellerObserver[FIELD_SIZE][FIELD_SIZE];
+    private DwellerObserver[][] dwellers;
 
     private PriorityQueue<DwellerPositionTuple> dwellerQueue = new PriorityQueue<>(dwellerComparator);
     private PriorityQueue<DwellerPositionTuple> newDwellerQueue = new PriorityQueue<>(dwellerComparator);
 
     public Field() {
-        FIELD_SIZE = 20;
-        initDefaultDwellers();
+        this(20);
     }
 
     public Field(int fieldSize) {
-        FIELD_SIZE = fieldSize;
+        this.fieldSize = fieldSize;
+        dwellers = new DwellerObserver[fieldSize][fieldSize];
         initDefaultDwellers();
     }
 
@@ -42,14 +42,12 @@ public class Field {
     }
 
     public int getSize() {
-        return FIELD_SIZE;
+        return fieldSize;
     }
 
     public void moveDweller(Point oldPoint, Point newPoint, DwellerObserver dweller) {
         removeDweller(oldPoint, dweller);
-        dwellers[oldPoint.x][oldPoint.y] = null;
         addDweller(newPoint, dweller);
-        dwellers[newPoint.x][newPoint.y] = dweller;
     }
 
     public DwellerObserver getDweller(Point point){
@@ -61,7 +59,7 @@ public class Field {
 
     private static Comparator<DwellerPositionTuple> dwellerComparator = (DwellerPositionTuple d1, DwellerPositionTuple d2)->Integer.compare(d1.getDweller().getPriority(), d2.getDweller().getPriority());
 
-    void newTurnNotify(){
+    private void newTurnNotify(){
         while (dwellerQueue.size() > 0) {
             DwellerPositionTuple dweller = dwellerQueue.poll();
             newDwellerQueue.add(dweller);
@@ -72,8 +70,8 @@ public class Field {
     }
 
     private void initDefaultDwellers() {
-        for(int i = 0; i < FIELD_SIZE; i++) {
-            for(int j = 0; j < FIELD_SIZE; j++) {
+        for(int i = 0; i < dwellers.length; i++) {
+            for(int j = 0; j < dwellers.length; j++) {
                 dwellers[i][j] = null;
             }
         }
@@ -88,7 +86,7 @@ public class Field {
     }
 
     public boolean isFieldAllowed(Point point) {
-        if (point.x < FIELD_SIZE && point.x >= 0 && point.y < FIELD_SIZE && point.y >= 0)
+        if (point.x < fieldSize && point.x >= 0 && point.y < fieldSize && point.y >= 0)
             return true;
         return false;
     }
